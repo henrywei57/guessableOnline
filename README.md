@@ -1,5 +1,7 @@
 # guessableOnline
 
+**Live status page:** https://henrywei57.github.io/guessableOnline/
+
 Monitors `https://beta.guessable.gg/` on a schedule via GitHub Actions and emails
 `henry.wh.wei@gmail.com` (via [Resend](https://resend.com)) the moment the site
 transitions from down/erroring (502, other 5xx, timeout, network error) back to
