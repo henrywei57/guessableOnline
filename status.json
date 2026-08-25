@@ -1,7 +1,7 @@
 {
-  "up": false,
-  "lastStatusCode": 502,
+  "up": true,
+  "lastStatusCode": 200,
   "lastError": null,
-  "lastCheckedAt": "2026-08-25T16:51:30.293Z",
-  "lastChangedAt": "2026-08-25T15:20:42.299Z"
+  "lastCheckedAt": "2026-08-25T17:20:51.046Z",
+  "lastChangedAt": "2026-08-25T17:20:51.046Z"
 }
