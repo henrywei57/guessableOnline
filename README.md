@@ -1,9 +1,14 @@
 # guessableOnline
 
 Monitors `https://beta.guessable.gg/` on a schedule via GitHub Actions and emails
-`henry.wh.wei.twitch@gmail.com` (via [Resend](https://resend.com)) the moment the site
+`henry.wh.wei@gmail.com` (via [Resend](https://resend.com)) the moment the site
 transitions from down/erroring (502, other 5xx, timeout, network error) back to
 accessible.
+
+Note: Resend's free tier only delivers to the account's own signup address unless a
+sending domain is verified — that's why alerts go to `henry.wh.wei@gmail.com` (the
+Resend account owner) rather than another address. Verify a domain at
+resend.com/domains to lift that restriction.
 
 ## How it works
 
@@ -26,7 +31,7 @@ accessible.
    ```
    Optional overrides (defaults shown):
    ```
-   gh secret set ALERT_EMAIL_TO --body "henry.wh.wei.twitch@gmail.com"
+   gh secret set ALERT_EMAIL_TO --body "henry.wh.wei@gmail.com"
    gh secret set ALERT_EMAIL_FROM --body "Guessable Monitor <onboarding@resend.dev>"
    ```
    `onboarding@resend.dev` works out of the box with no domain verification, but Resend

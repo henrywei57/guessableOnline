@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 const TARGET_URL = process.env.TARGET_URL || 'https://beta.guessable.gg/';
 const STATUS_FILE = fileURLToPath(new URL('./status.json', import.meta.url));
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
-const ALERT_EMAIL_TO = process.env.ALERT_EMAIL_TO || 'henry.wh.wei.twitch@gmail.com';
+const ALERT_EMAIL_TO = process.env.ALERT_EMAIL_TO || 'henry.wh.wei@gmail.com';
 const ALERT_EMAIL_FROM = process.env.ALERT_EMAIL_FROM || 'Guessable Monitor <onboarding@resend.dev>';
 const TIMEOUT_MS = 15000;
 
