@@ -1,0 +1,10 @@
+{
+  "name": "guessable-online-monitor",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Monitors https://beta.guessable.gg/ and emails an alert when it comes back online.",
+  "scripts": {
+    "check": "node check.js"
+  }
+}

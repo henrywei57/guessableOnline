@@ -1,0 +1,43 @@
+name: Monitor beta.guessable.gg
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: monitor
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Run check
+        env:
+          TARGET_URL: https://beta.guessable.gg/
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          ALERT_EMAIL_TO: ${{ secrets.ALERT_EMAIL_TO }}
+          ALERT_EMAIL_FROM: ${{ secrets.ALERT_EMAIL_FROM }}
+        run: node check.js
+
+      - name: Commit status if changed
+        run: |
+          if ! git diff --quiet status.json; then
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add status.json
+            git commit -m "Update status: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+            git push
+          else
+            echo "No status change."
+          fi
