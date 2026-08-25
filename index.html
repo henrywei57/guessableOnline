@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>beta.guessable.gg status</title>
+<style>
+  :root {
+    color-scheme: light dark;
+    --bg: #0b0d10;
+    --card: #14171c;
+    --text: #e7e9ec;
+    --muted: #8a919c;
+    --up: #2ecc71;
+    --down: #e5484d;
+    --unknown: #f5a623;
+    --border: #23272e;
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #f5f6f8;
+      --card: #ffffff;
+      --text: #1a1d21;
+      --muted: #5c6470;
+      --border: #e4e7eb;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    padding: 24px;
+  }
+  .card {
+    width: 100%;
+    max-width: 480px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    text-align: center;
+  }
+  .target {
+    color: var(--muted);
+    font-size: 14px;
+    word-break: break-all;
+    margin-bottom: 20px;
+  }
+  .dot {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    margin-right: 10px;
+    vertical-align: middle;
+  }
+  .dot.up { background: var(--up); box-shadow: 0 0 12px var(--up); }
+  .dot.down { background: var(--down); box-shadow: 0 0 12px var(--down); }
+  .dot.unknown { background: var(--unknown); }
+  .state {
+    font-size: 28px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+  }
+  .state.up { color: var(--up); }
+  .state.down { color: var(--down); }
+  .state.unknown { color: var(--unknown); }
+  .rows {
+    text-align: left;
+    border-top: 1px solid var(--border);
+    padding-top: 16px;
+  }
+  .row {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    font-size: 14px;
+  }
+  .row .label { color: var(--muted); }
+  .footer {
+    margin-top: 20px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  a { color: inherit; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="target">https://beta.guessable.gg/</div>
+    <div class="state unknown" id="state">
+      <span class="dot unknown" id="dot"></span>
+      <span id="stateText">Loading…</span>
+    </div>
+    <div class="rows">
+      <div class="row"><span class="label">Last status code</span><span id="statusCode">—</span></div>
+      <div class="row"><span class="label">Last checked</span><span id="lastChecked">—</span></div>
+      <div class="row"><span class="label">Last changed</span><span id="lastChanged">—</span></div>
+    </div>
+    <div class="footer">
+      Checked every ~5 min by
+      <a href="https://github.com/henrywei57/guessableOnline" target="_blank" rel="noopener">GitHub Actions</a>.
+      Refreshes automatically.
+    </div>
+  </div>
+
+  <script>
+    function relativeTime(iso) {
+      if (!iso) return '—';
+      const diffMs = Date.now() - new Date(iso).getTime();
+      const mins = Math.round(diffMs / 60000);
+      if (mins < 1) return 'just now';
+      if (mins === 1) return '1 minute ago';
+      if (mins < 60) return `${mins} minutes ago`;
+      const hours = Math.round(mins / 60);
+      if (hours === 1) return '1 hour ago';
+      return `${hours} hours ago`;
+    }
+
+    async function load() {
+      const stateEl = document.getElementById('state');
+      const dotEl = document.getElementById('dot');
+      const stateTextEl = document.getElementById('stateText');
+      try {
+        const res = await fetch(`status.json?t=${Date.now()}`, { cache: 'no-store' });
+        const data = await res.json();
+
+        const cls = data.up ? 'up' : 'down';
+        stateEl.className = `state ${cls}`;
+        dotEl.className = `dot ${cls}`;
+        stateTextEl.textContent = data.up ? 'Online' : 'Offline';
+
+        document.getElementById('statusCode').textContent = data.lastStatusCode ?? (data.lastError || '—');
+        document.getElementById('lastChecked').textContent = relativeTime(data.lastCheckedAt);
+        document.getElementById('lastChanged').textContent = relativeTime(data.lastChangedAt);
+      } catch (err) {
+        stateTextEl.textContent = 'Unable to load status';
+      }
+    }
+
+    load();
+    setInterval(load, 60000);
+  </script>
+</body>
+</html>
